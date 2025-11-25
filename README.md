@@ -13,6 +13,10 @@ This project demonstrates a practical approach to DDD in TypeScript, emphasizing
   - Name with length constraints
   - Password with security rules
 - **Entity**: User with unique identity (UUID)
+- **Use Cases**: Application logic with business rules
+  - AddUserUseCase: Add new users with domain validation
+  - GetAllUsersUseCase: Retrieve all users
+- **Repository Pattern**: Abstraction for data persistence
 - **In-Memory Storage**: Simple persistence with JSON file backup
 - **CLI Tools**: Command-line interface for managing domain objects
 - **Exception-based Error Handling**: Simple and direct error handling
@@ -28,6 +32,13 @@ src/
 │   └── Password.ts
 ├── entities/               # Entidades del dominio
 │   └── User.ts
+├── use-cases/              # Casos de uso (application logic)
+│   ├── AddUserUseCase.ts
+│   └── GetAllUsersUseCase.ts
+├── repositories/           # Abstracci\u00f3n de persistencia
+│   ├── UserRepository.ts
+│   ├── InMemoryUserRepository.ts
+│   └── StorageUserRepository.ts
 ├── storage/                # Persistencia simple
 │   └── InMemoryStorage.ts
 └── cli/                    # CLI tools
@@ -119,6 +130,10 @@ npm run check
 - Unique identifier (UUID)
 - Composed of Email, Name, and Password Value Objects
 - Identity-based equality
+
+### Business Rules (Use Cases)
+- **Cannot add duplicate emails**: Each email must be unique across all users
+- **One user per domain**: Only one user can exist per email domain (e.g., only one @gmail.com user)
 
 ## Architecture Philosophy
 

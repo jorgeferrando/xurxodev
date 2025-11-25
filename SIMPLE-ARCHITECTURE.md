@@ -20,6 +20,17 @@ src/
 │   ├── User.ts
 │   └── User.test.ts
 │
+├── use-cases/              # Casos de uso (application logic)
+│   ├── AddUserUseCase.ts
+│   ├── AddUserUseCase.test.ts
+│   ├── GetAllUsersUseCase.ts
+│   └── GetAllUsersUseCase.test.ts
+│
+├── repositories/           # Abstracción de persistencia
+│   ├── UserRepository.ts
+│   ├── InMemoryUserRepository.ts
+│   └── StorageUserRepository.ts
+│
 ├── storage/                # Persistencia simple
 │   └── InMemoryStorage.ts
 │
@@ -41,17 +52,35 @@ src/
   - Sin dependencias externas (excepto crypto para UUID)
   - Reglas de negocio encapsuladas
 
-### 2. Storage (Persistencia Simple)
+### 2. Casos de Uso (Application Logic)
+- **AddUserUseCase**: Añadir usuarios con validación de reglas de negocio
+- **GetAllUsersUseCase**: Obtener lista de usuarios
+- **Características**:
+  - Orquestan la lógica de aplicación
+  - Aplican reglas de negocio complejas
+  - Independientes de la infraestructura (usan repositorios)
+
+### 3. Repositories (Abstracción de Persistencia)
+- **UserRepository**: Interfaz para persistencia de usuarios
+- **InMemoryUserRepository**: Implementación en memoria
+- **StorageUserRepository**: Adaptador para InMemoryStorage
+- **Características**:
+  - Abstracción sobre el almacenamiento
+  - Permite intercambiar implementaciones
+  - Facilita testing con mocks
+
+### 4. Storage (Persistencia Simple)
 - **InMemoryStorage**: Singleton con persistencia en JSON
 - **Responsabilidades**:
   - Guardar y recuperar datos
   - Persistencia en archivo `.domain-storage.json`
   - Gestión de colecciones en memoria
 
-### 3. CLI (Interfaz de Usuario)
+### 5. CLI (Interfaz de Usuario)
 - Scripts para interactuar con el sistema
 - Manejo de entrada/salida
 - Presentación de errores
+- Utiliza casos de uso para ejecutar operaciones
 
 ## Principios Aplicados (Fase Simple)
 
@@ -74,22 +103,27 @@ src/
    - Cobertura del dominio
    - Validaciones probadas
 
+5. **Casos de uso**
+   - Lógica de aplicación separada
+   - Reglas de negocio aplicadas en un lugar central
+   - Reutilizable entre diferentes interfaces (CLI, API, etc.)
+
+6. **Repository Pattern**
+   - Abstracción para persistencia
+   - Facilita testing
+   - Permite cambiar implementaciones
+
 ### 🚫 Lo que NO hacemos (por ahora):
 
-1. **No creamos abstracciones innecesarias**
-   - No interfaces si solo hay una implementación
-   - No repositorios abstractos todavía
-   - No casos de uso separados
+1. **No complejidad innecesaria**
+   - No DTOs (usamos tipos simples)
+   - No Result types (exceptions funcionan bien)
+   - No inyección de dependencias compleja (constructores simples)
 
 2. **No sobre-ingeniería**
    - InMemoryStorage hace múltiples cosas: OK para esta fase
-   - CLI con lógica inline: OK para esta fase
-   - Dependencias directas: OK para esta fase
-
-3. **No complejidad prematura**
-   - No DTOs
-   - No Result types
-   - No inyección de dependencias compleja
+   - Repositorios simples sin lógica compleja
+   - No múltiples capas de abstracción
 
 ## Cuándo Refactorizar
 
@@ -141,16 +175,21 @@ src/
 
 ## Comparación: Simple vs Over-Engineered
 
-### Arquitectura Simple (Actual)
+### Arquitectura Simple con Casos de Uso (Actual)
 ```typescript
-// CLI crea directamente
-const user = new User(email, name, password);
+// CLI → Use Case → Repository
 const storage = InMemoryStorage.getInstance();
-storage.addUser(user);
+const userRepository = new StorageUserRepository(storage);
+const addUser = new AddUserUseCase(userRepository);
+const user = addUser.execute({ email, name, password });
 ```
-**Líneas de código**: ~3
-**Archivos involucrados**: 2
-**Complejidad**: Baja
+**Líneas de código**: ~4-5
+**Archivos involucrados**: 4
+**Complejidad**: Baja-Media
+**Ventajas**:
+- Reglas de negocio centralizadas
+- Fácil de testear
+- Reutilizable
 
 ### Arquitectura Over-Engineered (Innecesaria ahora)
 ```typescript
@@ -171,24 +210,25 @@ if (result.isSuccess()) {
 
 ## YAGNI (You Aren't Gonna Need It)
 
-No necesitamos:
-- ❌ Interfaces de repositorio (solo 1 implementación)
-- ❌ Casos de uso (lógica simple)
+Ya implementamos (justificado):
+- ✅ Interfaces de repositorio (facilita testing y permite múltiples implementaciones)
+- ✅ Casos de uso (centraliza reglas de negocio)
+
+Aún no necesitamos:
 - ❌ DTOs (conversiones directas)
 - ❌ Result types o Either monads (exceptions simples funcionan bien)
-- ❌ Dependency Injection container
-- ❌ Múltiples capas de abstracción
+- ❌ Dependency Injection container (constructores simples)
+- ❌ Múltiples capas de abstracción innecesarias
 
 ## Deuda Técnica Aceptable
 
-Esta arquitectura simple tiene **deuda técnica consciente**:
+Esta arquitectura tiene **deuda técnica consciente**:
 
 | Item | Estado | Cuando Refactorizar |
 |------|--------|---------------------|
-| InMemoryStorage viola SRP | 🟡 Aceptable | Múltiples implementaciones |
-| CLI con lógica inline | 🟡 Aceptable | Lógica compleja |
-| Dependencias directas | 🟡 Aceptable | Necesidad de mockear |
-| Sin abstracciones | 🟡 Aceptable | Múltiples implementaciones |
+| InMemoryStorage viola SRP | 🟡 Aceptable | Cuando se vuelva muy complejo |
+| Sin DI Container | 🟡 Aceptable | Múltiples configuraciones |
+| Sin DTOs | 🟡 Aceptable | Necesidad de transformaciones complejas |
 
 ## Conclusión
 
