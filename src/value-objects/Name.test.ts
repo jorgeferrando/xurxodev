@@ -7,9 +7,8 @@ describe("Name", () => {
       const names = ["Juan", "María", "José", "Ana", "Juan Carlos", "María José"];
 
       names.forEach((nameStr) => {
-        const result = Name.create(nameStr);
-        expect(result.isSuccess()).toBe(true);
-        expect(result.getValue()).toBeDefined();
+        const name = Name.create(nameStr);
+        expect(name).toBeDefined();
       });
     });
 
@@ -17,9 +16,7 @@ describe("Name", () => {
       const names = ["", "   "];
 
       names.forEach((nameStr) => {
-        const result = Name.create(nameStr);
-        expect(result.isFailure()).toBe(true);
-        expect(result.getError()).toContain("vacío");
+        expect(() => Name.create(nameStr)).toThrow("vacío");
       });
     });
 
@@ -27,9 +24,7 @@ describe("Name", () => {
       const names = ["A", "J"];
 
       names.forEach((nameStr) => {
-        const result = Name.create(nameStr);
-        expect(result.isFailure()).toBe(true);
-        expect(result.getError()).toContain("al menos 2 caracteres");
+        expect(() => Name.create(nameStr)).toThrow("al menos 2 caracteres");
       });
     });
 
@@ -43,40 +38,36 @@ describe("Name", () => {
       ];
 
       names.forEach((nameStr) => {
-        const result = Name.create(nameStr);
-        expect(result.isFailure()).toBe(true);
-        expect(result.getError()).toContain("solo puede contener letras");
+        expect(() => Name.create(nameStr)).toThrow("solo puede contener letras");
       });
     });
 
     it("should trim whitespace", () => {
-      const result = Name.create("  Juan  ");
-      expect(result.isSuccess()).toBe(true);
-      expect(result.getValue().getValue()).toBe("Juan");
+      const name = Name.create("  Juan  ");
+      expect(name.getValue()).toBe("Juan");
     });
 
     it("should succeed with accents", () => {
       const names = ["José", "María", "Ángel"];
 
       names.forEach((nameStr) => {
-        const result = Name.create(nameStr);
-        expect(result.isSuccess()).toBe(true);
-        expect(result.getValue()).toBeDefined();
+        const name = Name.create(nameStr);
+        expect(name).toBeDefined();
       });
     });
   });
 
   describe("Equals", () => {
     it("should return true with equal names", () => {
-      const name1 = Name.create("Juan").getValue();
-      const name2 = Name.create("Juan").getValue();
+      const name1 = Name.create("Juan");
+      const name2 = Name.create("Juan");
 
       expect(name1.equals(name2)).toBe(true);
     });
 
     it("should return false with different names", () => {
-      const name1 = Name.create("Juan").getValue();
-      const name2 = Name.create("María").getValue();
+      const name1 = Name.create("Juan");
+      const name2 = Name.create("María");
 
       expect(name1.equals(name2)).toBe(false);
     });
@@ -84,7 +75,7 @@ describe("Name", () => {
 
   describe("ToString", () => {
     it("should return name value", () => {
-      const name = Name.create("Juan Carlos").getValue();
+      const name = Name.create("Juan Carlos");
       expect(name.toString()).toBe("Juan Carlos");
     });
   });

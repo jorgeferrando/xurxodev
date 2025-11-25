@@ -11,9 +11,8 @@ describe("Email", () => {
       ];
 
       emails.forEach((emailStr) => {
-        const result = Email.create(emailStr);
-        expect(result.isSuccess()).toBe(true);
-        expect(result.getValue()).toBeDefined();
+        const email = Email.create(emailStr);
+        expect(email).toBeDefined();
       });
     });
 
@@ -21,9 +20,7 @@ describe("Email", () => {
       const emails = ["", "   "];
 
       emails.forEach((emailStr) => {
-        const result = Email.create(emailStr);
-        expect(result.isFailure()).toBe(true);
-        expect(result.getError()).toContain("vacío");
+        expect(() => Email.create(emailStr)).toThrow("vacío");
       });
     });
 
@@ -37,31 +34,27 @@ describe("Email", () => {
       ];
 
       emails.forEach((emailStr) => {
-        const result = Email.create(emailStr);
-        expect(result.isFailure()).toBe(true);
-        expect(result.getError()).toContain("formato");
+        expect(() => Email.create(emailStr)).toThrow("formato");
       });
     });
 
     it("should normalize to lowercase", () => {
-      const result = Email.create("User@Example.COM");
-      expect(result.isSuccess()).toBe(true);
-      expect(result.getValue().getValue()).toBe("user@example.com");
+      const email = Email.create("User@Example.COM");
+      expect(email.getValue()).toBe("user@example.com");
     });
   });
 
   describe("Domain", () => {
     it("should return correct domain", () => {
-      const result = Email.create("user@example.com");
-      expect(result.isSuccess()).toBe(true);
-      expect(result.getValue().domain).toBe("example.com");
+      const email = Email.create("user@example.com");
+      expect(email.domain).toBe("example.com");
     });
   });
 
   describe("Equals", () => {
     it("should return true with equal emails", () => {
-      const email1 = Email.create("user@example.com").getValue();
-      const email2 = Email.create("user@example.com").getValue();
+      const email1 = Email.create("user@example.com");
+      const email2 = Email.create("user@example.com");
 
       expect(email1.equals(email2)).toBe(true);
     });
@@ -69,7 +62,7 @@ describe("Email", () => {
 
   describe("ToString", () => {
     it("should return email value", () => {
-      const email = Email.create("user@example.com").getValue();
+      const email = Email.create("user@example.com");
       expect(email.toString()).toBe("user@example.com");
     });
   });

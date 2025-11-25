@@ -23,10 +23,10 @@ describe("InMemoryStorage", () => {
     it("should add and retrieve users", () => {
       const storage = InMemoryStorage.getInstance();
       const user = User.create(
-        Email.create("test@example.com").getValue(),
-        Name.create("Test User").getValue(),
-        Password.create("Pass1234").getValue()
-      ).getValue();
+        Email.create("test@example.com"),
+        Name.create("Test User"),
+        Password.create("Pass1234")
+      );
 
       storage.addUser(user);
 
@@ -39,16 +39,16 @@ describe("InMemoryStorage", () => {
       const storage = InMemoryStorage.getInstance();
 
       const user1 = User.create(
-        Email.create("user1@test.com").getValue(),
-        Name.create("User One").getValue(),
-        Password.create("Pass1234").getValue()
-      ).getValue();
+        Email.create("user1@test.com"),
+        Name.create("User One"),
+        Password.create("Pass1234")
+      );
 
       const user2 = User.create(
-        Email.create("user2@test.com").getValue(),
-        Name.create("User Two").getValue(),
-        Password.create("Pass5678").getValue()
-      ).getValue();
+        Email.create("user2@test.com"),
+        Name.create("User Two"),
+        Password.create("Pass5678")
+      );
 
       storage.addUser(user1);
       storage.addUser(user2);
@@ -61,7 +61,7 @@ describe("InMemoryStorage", () => {
   describe("Email storage", () => {
     it("should add and retrieve emails", () => {
       const storage = InMemoryStorage.getInstance();
-      const email = Email.create("test@example.com").getValue();
+      const email = Email.create("test@example.com");
 
       storage.addEmail(email);
 
@@ -72,8 +72,8 @@ describe("InMemoryStorage", () => {
 
     it("should not duplicate emails", () => {
       const storage = InMemoryStorage.getInstance();
-      const email1 = Email.create("test@example.com").getValue();
-      const email2 = Email.create("test@example.com").getValue();
+      const email1 = Email.create("test@example.com");
+      const email2 = Email.create("test@example.com");
 
       storage.addEmail(email1);
       storage.addEmail(email2);
@@ -86,7 +86,7 @@ describe("InMemoryStorage", () => {
   describe("Name storage", () => {
     it("should add and retrieve names", () => {
       const storage = InMemoryStorage.getInstance();
-      const name = Name.create("Jorge").getValue();
+      const name = Name.create("Jorge");
 
       storage.addName(name);
 
@@ -97,8 +97,8 @@ describe("InMemoryStorage", () => {
 
     it("should not duplicate names", () => {
       const storage = InMemoryStorage.getInstance();
-      const name1 = Name.create("Jorge").getValue();
-      const name2 = Name.create("Jorge").getValue();
+      const name1 = Name.create("Jorge");
+      const name2 = Name.create("Jorge");
 
       storage.addName(name1);
       storage.addName(name2);
@@ -111,7 +111,7 @@ describe("InMemoryStorage", () => {
   describe("Password storage", () => {
     it("should add and retrieve passwords", () => {
       const storage = InMemoryStorage.getInstance();
-      const password = Password.create("Pass1234").getValue();
+      const password = Password.create("Pass1234");
 
       storage.addPassword(password);
 
@@ -122,8 +122,8 @@ describe("InMemoryStorage", () => {
 
     it("should not duplicate passwords", () => {
       const storage = InMemoryStorage.getInstance();
-      const password1 = Password.create("Pass1234").getValue();
-      const password2 = Password.create("Pass1234").getValue();
+      const password1 = Password.create("Pass1234");
+      const password2 = Password.create("Pass1234");
 
       storage.addPassword(password1);
       storage.addPassword(password2);
@@ -140,14 +140,14 @@ describe("InMemoryStorage", () => {
       // Añadir datos
       storage.addUser(
         User.create(
-          Email.create("test@example.com").getValue(),
-          Name.create("Test").getValue(),
-          Password.create("Pass1234").getValue()
-        ).getValue()
+          Email.create("test@example.com"),
+          Name.create("Test"),
+          Password.create("Pass1234")
+        )
       );
-      storage.addEmail(Email.create("email@test.com").getValue());
-      storage.addName(Name.create("Name").getValue());
-      storage.addPassword(Password.create("Pass5678").getValue());
+      storage.addEmail(Email.create("email@test.com"));
+      storage.addName(Name.create("Name"));
+      storage.addPassword(Password.create("Pass5678"));
 
       // Verificar que hay datos
       expect(storage.getAllUsers()).toHaveLength(1);
@@ -172,10 +172,10 @@ describe("InMemoryStorage", () => {
 
       // Añadir usuario válido
       const user = User.create(
-        Email.create("valid@test.com").getValue(),
-        Name.create("Valid").getValue(),
-        Password.create("Pass1234").getValue()
-      ).getValue();
+        Email.create("valid@test.com"),
+        Name.create("Valid"),
+        Password.create("Pass1234")
+      );
 
       storage.addUser(user);
 

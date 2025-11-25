@@ -13,23 +13,12 @@ describe("Create User Command (Integration)", () => {
 
   describe("Creating user with valid data", () => {
     it("should create user with valid name, email and password", () => {
-      const nameResult = Name.create("Jorge");
-      const emailResult = Email.create("jorge@google.com");
-      const passwordResult = Password.create("Password123");
+      const name = Name.create("Jorge");
+      const email = Email.create("jorge@google.com");
+      const password = Password.create("Password123");
 
-      expect(nameResult.isSuccess()).toBe(true);
-      expect(emailResult.isSuccess()).toBe(true);
-      expect(passwordResult.isSuccess()).toBe(true);
+      const user = User.create(email, name, password);
 
-      const userResult = User.create(
-        emailResult.getValue(),
-        nameResult.getValue(),
-        passwordResult.getValue()
-      );
-
-      expect(userResult.isSuccess()).toBe(true);
-
-      const user = userResult.getValue();
       expect(user.id).toBeDefined();
       expect(user.name.getValue()).toBe("Jorge");
       expect(user.email.getValue()).toBe("jorge@google.com");
@@ -37,17 +26,11 @@ describe("Create User Command (Integration)", () => {
     });
 
     it("should store user in storage", () => {
-      const emailResult = Email.create("test@example.com");
-      const nameResult = Name.create("Test User");
-      const passwordResult = Password.create("Test1234");
+      const email = Email.create("test@example.com");
+      const name = Name.create("Test User");
+      const password = Password.create("Test1234");
 
-      const userResult = User.create(
-        emailResult.getValue(),
-        nameResult.getValue(),
-        passwordResult.getValue()
-      );
-
-      const user = userResult.getValue();
+      const user = User.create(email, name, password);
       const storage = InMemoryStorage.getInstance();
       storage.addUser(user);
 
@@ -59,38 +42,23 @@ describe("Create User Command (Integration)", () => {
 
   describe("Validation errors", () => {
     it("should fail with invalid name", () => {
-      const nameResult = Name.create("A"); // Muy corto
-
-      expect(nameResult.isFailure()).toBe(true);
-      expect(nameResult.getError()).toContain("al menos 2 caracteres");
+      expect(() => Name.create("A")).toThrow("al menos 2 caracteres");
     });
 
     it("should fail with invalid email", () => {
-      const emailResult = Email.create("invalid-email");
-
-      expect(emailResult.isFailure()).toBe(true);
-      expect(emailResult.getError()).toContain("formato");
+      expect(() => Email.create("invalid-email")).toThrow("formato");
     });
 
     it("should fail with invalid password", () => {
-      const passwordResult = Password.create("short");
-
-      expect(passwordResult.isFailure()).toBe(true);
-      expect(passwordResult.getError()).toContain("8 caracteres");
+      expect(() => Password.create("short")).toThrow("8 caracteres");
     });
 
     it("should fail with password without numbers", () => {
-      const passwordResult = Password.create("OnlyLetters");
-
-      expect(passwordResult.isFailure()).toBe(true);
-      expect(passwordResult.getError()).toContain("número");
+      expect(() => Password.create("OnlyLetters")).toThrow("número");
     });
 
     it("should fail with password without letters", () => {
-      const passwordResult = Password.create("12345678");
-
-      expect(passwordResult.isFailure()).toBe(true);
-      expect(passwordResult.getError()).toContain("letra");
+      expect(() => Password.create("12345678")).toThrow("letra");
     });
   });
 
@@ -99,20 +67,20 @@ describe("Create User Command (Integration)", () => {
       const storage = InMemoryStorage.getInstance();
 
       // Crear primer usuario
-      const user1Result = User.create(
-        Email.create("user1@test.com").getValue(),
-        Name.create("User One").getValue(),
-        Password.create("Pass1234").getValue()
+      const user1 = User.create(
+        Email.create("user1@test.com"),
+        Name.create("User One"),
+        Password.create("Pass1234")
       );
-      storage.addUser(user1Result.getValue());
+      storage.addUser(user1);
 
       // Crear segundo usuario
-      const user2Result = User.create(
-        Email.create("user2@test.com").getValue(),
-        Name.create("User Two").getValue(),
-        Password.create("Pass5678").getValue()
+      const user2 = User.create(
+        Email.create("user2@test.com"),
+        Name.create("User Two"),
+        Password.create("Pass5678")
       );
-      storage.addUser(user2Result.getValue());
+      storage.addUser(user2);
 
       // Verificar que ambos están en storage
       const users = storage.getAllUsers();

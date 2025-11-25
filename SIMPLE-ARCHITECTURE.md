@@ -175,7 +175,7 @@ No necesitamos:
 - ❌ Interfaces de repositorio (solo 1 implementación)
 - ❌ Casos de uso (lógica simple)
 - ❌ DTOs (conversiones directas)
-- ❌ Result types (exceptions funcionan bien)
+- ❌ Result types o Either monads (exceptions simples funcionan bien)
 - ❌ Dependency Injection container
 - ❌ Múltiples capas de abstracción
 

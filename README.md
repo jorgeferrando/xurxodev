@@ -15,7 +15,7 @@ This project demonstrates a practical approach to DDD in TypeScript, emphasizing
 - **Entity**: User with unique identity (UUID)
 - **In-Memory Storage**: Simple persistence with JSON file backup
 - **CLI Tools**: Command-line interface for managing domain objects
-- **Result Monad**: Type-safe error handling
+- **Exception-based Error Handling**: Simple and direct error handling
 - **Full Test Coverage**: Comprehensive unit tests using Vitest
 
 ## Project Structure
@@ -30,8 +30,6 @@ src/
 │   └── User.ts
 ├── storage/                # Persistencia simple
 │   └── InMemoryStorage.ts
-├── shared/                 # Shared utilities
-│   └── Result.ts
 └── cli/                    # CLI tools
     ├── create-user.ts
     ├── create-value-object.ts
@@ -138,7 +136,6 @@ See [SIMPLE-ARCHITECTURE.md](./SIMPLE-ARCHITECTURE.md) for detailed architecture
 - [CLI Usage Guide](./CLI-USAGE.md)
 - [Architecture Analysis](./ARCHITECTURE-ANALYSIS.md)
 - [Simple Architecture](./SIMPLE-ARCHITECTURE.md)
-- [Result Monad Documentation](./RESULT-MONAD.md)
 - [Test Coverage](./TEST-COVERAGE.md)
 - [Examples](./EXAMPLES.md)
 

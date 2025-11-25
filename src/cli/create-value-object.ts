@@ -8,54 +8,44 @@ import { InMemoryStorage } from "../storage/InMemoryStorage";
 type ValueObjectType = "email" | "name" | "password";
 
 function createValueObject(type: ValueObjectType, value: string): void {
-  const storage = InMemoryStorage.getInstance();
+  try {
+    const storage = InMemoryStorage.getInstance();
 
-  switch (type) {
-    case "email": {
-      const result = Email.create(value);
-      if (result.isFailure()) {
-        console.error(`✗ Error al crear email:`, result.getError());
-        process.exit(1);
+    switch (type) {
+      case "email": {
+        const email = Email.create(value);
+        storage.addEmail(email);
+        console.log("✓ Email creado exitosamente:");
+        console.log(`  Valor: ${email.getValue()}`);
+        console.log(`  Dominio: ${email.domain}`);
+        break;
       }
-      const email = result.getValue();
-      storage.addEmail(email);
-      console.log("✓ Email creado exitosamente:");
-      console.log(`  Valor: ${email.getValue()}`);
-      console.log(`  Dominio: ${email.domain}`);
-      break;
-    }
 
-    case "name": {
-      const result = Name.create(value);
-      if (result.isFailure()) {
-        console.error(`✗ Error al crear name:`, result.getError());
-        process.exit(1);
+      case "name": {
+        const name = Name.create(value);
+        storage.addName(name);
+        console.log("✓ Name creado exitosamente:");
+        console.log(`  Valor: ${name.getValue()}`);
+        break;
       }
-      const name = result.getValue();
-      storage.addName(name);
-      console.log("✓ Name creado exitosamente:");
-      console.log(`  Valor: ${name.getValue()}`);
-      break;
-    }
 
-    case "password": {
-      const result = Password.create(value);
-      if (result.isFailure()) {
-        console.error(`✗ Error al crear password:`, result.getError());
-        process.exit(1);
+      case "password": {
+        const password = Password.create(value);
+        storage.addPassword(password);
+        console.log("✓ Password creado exitosamente:");
+        console.log(`  Valor: ${password.getValue()}`);
+        console.log(`  Mostrado como: ${password.toString()}`);
+        break;
       }
-      const password = result.getValue();
-      storage.addPassword(password);
-      console.log("✓ Password creado exitosamente:");
-      console.log(`  Valor: ${password.getValue()}`);
-      console.log(`  Mostrado como: ${password.toString()}`);
-      break;
-    }
 
-    default:
-      console.error(`✗ Tipo de value object desconocido: ${type}`);
-      console.error("Tipos válidos: email, name, password");
-      process.exit(1);
+      default:
+        console.error(`✗ Tipo de value object desconocido: ${type}`);
+        console.error("Tipos válidos: email, name, password");
+        process.exit(1);
+    }
+  } catch (error) {
+    console.error("✗ Error:", (error as Error).message);
+    process.exit(1);
   }
 }
 

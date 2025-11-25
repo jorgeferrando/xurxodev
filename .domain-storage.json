@@ -1,13 +1,12 @@
 {
-  "users": [
-    {
-      "id": "f3591ace-1ad8-46c4-a4fb-72649b762ddc",
-      "email": "valid@test.com",
-      "name": "Valid",
-      "password": "Pass1234"
-    }
+  "users": [],
+  "emails": [
+    "test@example.com"
   ],
-  "emails": [],
-  "names": [],
-  "passwords": []
+  "names": [
+    "Test User"
+  ],
+  "passwords": [
+    "Test1234"
+  ]
 }
