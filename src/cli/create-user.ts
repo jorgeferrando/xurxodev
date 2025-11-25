@@ -2,13 +2,13 @@
 
 import { InMemoryStorage } from "../storage/InMemoryStorage";
 import { StorageUserRepository } from "../repositories/StorageUserRepository";
-import { AddUser } from "../use-cases/AddUser";
+import { AddUserUseCase } from "../use-cases/AddUserUseCase";
 
 function createUser(name: string, email: string, password: string): void {
   try {
     const storage = InMemoryStorage.getInstance();
     const userRepository = new StorageUserRepository(storage);
-    const addUser = new AddUser(userRepository);
+    const addUser = new AddUserUseCase(userRepository);
 
     const user = addUser.execute({ email, name, password });
 

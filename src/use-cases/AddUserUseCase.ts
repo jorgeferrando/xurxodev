@@ -16,7 +16,7 @@ export type AddUserRequest = {
  * - Cannot add two users with the same email
  * - Only one user per domain can exist (e.g., one user with gmail, etc.)
  */
-export class AddUser {
+export class AddUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
   execute(request: AddUserRequest): User {

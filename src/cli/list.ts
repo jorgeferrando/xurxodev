@@ -2,14 +2,14 @@
 
 import { InMemoryStorage } from "../storage/InMemoryStorage";
 import { StorageUserRepository } from "../repositories/StorageUserRepository";
-import { GetAllUsers } from "../use-cases/GetAllUsers";
+import { GetAllUsersUseCase } from "../use-cases/GetAllUsersUseCase";
 
 type ListType = "all" | "users" | "emails" | "names" | "passwords";
 
 function listItems(type: ListType): void {
   const storage = InMemoryStorage.getInstance();
   const userRepository = new StorageUserRepository(storage);
-  const getAllUsers = new GetAllUsers(userRepository);
+  const getAllUsers = new GetAllUsersUseCase(userRepository);
 
   if (type === "all" || type === "users") {
     const users = getAllUsers.execute();

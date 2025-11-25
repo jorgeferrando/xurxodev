@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { AddUser } from "./AddUser";
+import { AddUserUseCase } from "./AddUserUseCase";
 import { InMemoryUserRepository } from "../repositories/InMemoryUserRepository";
 import { User } from "../entities/User";
 import { Email } from "../value-objects/Email";
 import { Name } from "../value-objects/Name";
 import { Password } from "../value-objects/Password";
 
-describe("AddUser", () => {
+describe("AddUserUseCase", () => {
   let userRepository: InMemoryUserRepository;
-  let addUser: AddUser;
+  let addUser: AddUserUseCase;
 
   beforeEach(() => {
     userRepository = new InMemoryUserRepository();
-    addUser = new AddUser(userRepository);
+    addUser = new AddUserUseCase(userRepository);
   });
 
   it("debería añadir un usuario nuevo correctamente", () => {

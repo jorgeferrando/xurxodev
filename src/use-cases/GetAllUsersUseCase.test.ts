@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { GetAllUsers } from "./GetAllUsers";
+import { GetAllUsersUseCase } from "./GetAllUsersUseCase";
 import { InMemoryUserRepository } from "../repositories/InMemoryUserRepository";
 import { User } from "../entities/User";
 import { Email } from "../value-objects/Email";
 import { Name } from "../value-objects/Name";
 import { Password } from "../value-objects/Password";
 
-describe("GetAllUsers", () => {
+describe("GetAllUsersUseCase", () => {
   let userRepository: InMemoryUserRepository;
-  let getAllUsers: GetAllUsers;
+  let getAllUsers: GetAllUsersUseCase;
 
   beforeEach(() => {
     userRepository = new InMemoryUserRepository();
-    getAllUsers = new GetAllUsers(userRepository);
+    getAllUsers = new GetAllUsersUseCase(userRepository);
   });
 
   it("debería devolver una lista vacía cuando no hay usuarios", () => {
