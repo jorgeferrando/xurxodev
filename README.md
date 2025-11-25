@@ -141,7 +141,6 @@ See [SIMPLE-ARCHITECTURE.md](./SIMPLE-ARCHITECTURE.md) for detailed architecture
 - [Result Monad Documentation](./RESULT-MONAD.md)
 - [Test Coverage](./TEST-COVERAGE.md)
 - [Examples](./EXAMPLES.md)
-- [C# to TypeScript Comparison](./CSHARP-TYPESCRIPT-COMPARISON.md)
 
 ## Tech Stack
 
