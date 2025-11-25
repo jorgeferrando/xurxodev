@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 
 import { InMemoryStorage } from "../storage/InMemoryStorage";
+import { StorageUserRepository } from "../repositories/StorageUserRepository";
+import { GetAllUsers } from "../use-cases/GetAllUsers";
 
 type ListType = "all" | "users" | "emails" | "names" | "passwords";
 
 function listItems(type: ListType): void {
   const storage = InMemoryStorage.getInstance();
+  const userRepository = new StorageUserRepository(storage);
+  const getAllUsers = new GetAllUsers(userRepository);
 
   if (type === "all" || type === "users") {
-    const users = storage.getAllUsers();
+    const users = getAllUsers.execute();
     console.log("\n=== USUARIOS ===");
     if (users.length === 0) {
       console.log("  (ninguno)");

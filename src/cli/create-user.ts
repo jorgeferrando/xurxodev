@@ -1,20 +1,16 @@
 #!/usr/bin/env node
 
-import { User } from "../entities/User";
-import { Email } from "../value-objects/Email";
-import { Name } from "../value-objects/Name";
-import { Password } from "../value-objects/Password";
 import { InMemoryStorage } from "../storage/InMemoryStorage";
+import { StorageUserRepository } from "../repositories/StorageUserRepository";
+import { AddUser } from "../use-cases/AddUser";
 
 function createUser(name: string, email: string, password: string): void {
   try {
-    const userName = Name.create(name);
-    const userEmail = Email.create(email);
-    const userPassword = Password.create(password);
-    const user = User.create(userEmail, userName, userPassword);
-
     const storage = InMemoryStorage.getInstance();
-    storage.addUser(user);
+    const userRepository = new StorageUserRepository(storage);
+    const addUser = new AddUser(userRepository);
+
+    const user = addUser.execute({ email, name, password });
 
     console.log("✓ Usuario creado exitosamente:");
     console.log(`  ID: ${user.id}`);
