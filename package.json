@@ -1,0 +1,27 @@
+{
+  "name": "xurxodev",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "biome lint .",
+    "format": "biome format --write .",
+    "check": "biome check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "create-user": "tsx src/cli/create-user.ts",
+    "create-vo": "tsx src/cli/create-value-object.ts",
+    "list": "tsx src/cli/list.ts",
+    "clear": "tsx src/cli/clear.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@biomejs/biome": "^2.3.6",
+    "@types/node": "^24.10.1",
+    "tsx": "^4.20.6",
+    "vitest": "^4.0.13"
+  }
+}

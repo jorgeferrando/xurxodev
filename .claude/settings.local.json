@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test)",
+      "Bash(npm run create-user:*)",
+      "Bash(npm run create-vo:*)",
+      "Bash(npm run list:*)",
+      "Bash(npm run clear:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
