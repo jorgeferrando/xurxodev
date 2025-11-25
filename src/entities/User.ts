@@ -1,7 +1,6 @@
 import { Email } from "../value-objects/Email";
 import { Name } from "../value-objects/Name";
 import { Password } from "../value-objects/Password";
-import { Result } from "../shared/Result";
 import { randomUUID } from "crypto";
 
 /**
@@ -33,9 +32,9 @@ export class User {
     this._password = password;
   }
 
-  static create(email: Email, name: Name, password: Password): Result<User> {
+  static create(email: Email, name: Name, password: Password): User {
     const id = randomUUID();
-    return Result.ok(new User(id, email, name, password));
+    return new User(id, email, name, password);
   }
 
   static reconstruct(
@@ -43,27 +42,24 @@ export class User {
     email: Email,
     name: Name,
     password: Password
-  ): Result<User> {
+  ): User {
     if (!id || id.trim().length === 0) {
-      return Result.fail("El ID no puede ser vacío");
+      throw new Error("El ID no puede ser vacío");
     }
 
-    return Result.ok(new User(id, email, name, password));
+    return new User(id, email, name, password);
   }
 
-  updateEmail(newEmail: Email): Result<void> {
+  updateEmail(newEmail: Email): void {
     this._email = newEmail;
-    return Result.ok(undefined);
   }
 
-  updateName(newName: Name): Result<void> {
+  updateName(newName: Name): void {
     this._name = newName;
-    return Result.ok(undefined);
   }
 
-  updatePassword(newPassword: Password): Result<void> {
+  updatePassword(newPassword: Password): void {
     this._password = newPassword;
-    return Result.ok(undefined);
   }
 
   equals(other: User): boolean {

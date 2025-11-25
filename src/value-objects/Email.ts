@@ -1,7 +1,5 @@
-import { Result } from "../shared/Result";
-
 /**
- * Value Object Email with validation using Result monad
+ * Value Object Email with validation
  */
 export class Email {
   private readonly value: string;
@@ -11,17 +9,17 @@ export class Email {
     this.value = value;
   }
 
-  static create(value: string): Result<Email> {
+  static create(value: string): Email {
     if (!value || value.trim().length === 0) {
-      return Result.fail("El email no puede estar vacío");
+      throw new Error("El email no puede estar vacío");
     }
 
     if (!Email.EMAIL_REGEX.test(value)) {
-      return Result.fail("El formato del email no es válido");
+      throw new Error("El formato del email no es válido");
     }
 
     const normalizedValue = value.toLowerCase().trim();
-    return Result.ok(new Email(normalizedValue));
+    return new Email(normalizedValue);
   }
 
   get domain(): string {

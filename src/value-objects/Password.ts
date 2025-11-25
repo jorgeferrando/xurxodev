@@ -1,7 +1,5 @@
-import { Result } from "../shared/Result";
-
 /**
- * Value Object Password with validation using Result monad
+ * Value Object Password with validation
  * Invariants: minimum 8 characters, at least one letter and one number
  */
 export class Password {
@@ -11,24 +9,24 @@ export class Password {
     this.value = value;
   }
 
-  static create(value: string): Result<Password> {
+  static create(value: string): Password {
     if (!value || value.trim().length === 0) {
-      return Result.fail("La contraseña no puede estar vacía");
+      throw new Error("La contraseña no puede estar vacía");
     }
 
     if (value.length < 8) {
-      return Result.fail("La contraseña debe tener al menos 8 caracteres");
+      throw new Error("La contraseña debe tener al menos 8 caracteres");
     }
 
     if (!/[a-zA-Z]/.test(value)) {
-      return Result.fail("La contraseña debe contener al menos una letra");
+      throw new Error("La contraseña debe contener al menos una letra");
     }
 
     if (!/\d/.test(value)) {
-      return Result.fail("La contraseña debe contener al menos un número");
+      throw new Error("La contraseña debe contener al menos un número");
     }
 
-    return Result.ok(new Password(value));
+    return new Password(value);
   }
 
   matches(plainPassword: string): boolean {

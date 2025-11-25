@@ -94,22 +94,14 @@ export class InMemoryStorage {
   getAllUsers(): User[] {
     return this.data.users
       .map((u) => {
-        const emailResult = Email.create(u.email);
-        const nameResult = Name.create(u.name);
-        const passwordResult = Password.create(u.password);
-
-        if (emailResult.isFailure() || nameResult.isFailure() || passwordResult.isFailure()) {
+        try {
+          const email = Email.create(u.email);
+          const name = Name.create(u.name);
+          const password = Password.create(u.password);
+          return User.reconstruct(u.id, email, name, password);
+        } catch {
           return null;
         }
-
-        const userResult = User.reconstruct(
-          u.id,
-          emailResult.getValue(),
-          nameResult.getValue(),
-          passwordResult.getValue()
-        );
-
-        return userResult.isSuccess() ? userResult.getValue() : null;
       })
       .filter((user): user is User => user !== null);
   }
@@ -117,8 +109,11 @@ export class InMemoryStorage {
   getAllEmails(): Email[] {
     return this.data.emails
       .map((e) => {
-        const result = Email.create(e);
-        return result.isSuccess() ? result.getValue() : null;
+        try {
+          return Email.create(e);
+        } catch {
+          return null;
+        }
       })
       .filter((email): email is Email => email !== null);
   }
@@ -126,8 +121,11 @@ export class InMemoryStorage {
   getAllNames(): Name[] {
     return this.data.names
       .map((n) => {
-        const result = Name.create(n);
-        return result.isSuccess() ? result.getValue() : null;
+        try {
+          return Name.create(n);
+        } catch {
+          return null;
+        }
       })
       .filter((name): name is Name => name !== null);
   }
@@ -135,8 +133,11 @@ export class InMemoryStorage {
   getAllPasswords(): Password[] {
     return this.data.passwords
       .map((p) => {
-        const result = Password.create(p);
-        return result.isSuccess() ? result.getValue() : null;
+        try {
+          return Password.create(p);
+        } catch {
+          return null;
+        }
       })
       .filter((password): password is Password => password !== null);
   }

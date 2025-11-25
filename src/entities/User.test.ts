@@ -5,9 +5,9 @@ import { Name } from "../value-objects/Name";
 import { Password } from "../value-objects/Password";
 
 describe("User", () => {
-  const createEmail = () => Email.create("user@example.com").getValue();
-  const createName = () => Name.create("Juan").getValue();
-  const createPassword = () => Password.create("Password123").getValue();
+  const createEmail = () => Email.create("user@example.com");
+  const createName = () => Name.create("Juan");
+  const createPassword = () => Password.create("Password123");
 
   describe("Create", () => {
     it("should generate UUID with valid data", () => {
@@ -15,10 +15,8 @@ describe("User", () => {
       const name = createName();
       const password = createPassword();
 
-      const result = User.create(email, name, password);
+      const user = User.create(email, name, password);
 
-      expect(result.isSuccess()).toBe(true);
-      const user = result.getValue();
       expect(user.id).toBeDefined();
       expect(user.id.length).toBeGreaterThan(0);
       expect(user.email).toBe(email);
@@ -27,8 +25,8 @@ describe("User", () => {
     });
 
     it("should have different UUIDs for two users", () => {
-      const user1 = User.create(createEmail(), createName(), createPassword()).getValue();
-      const user2 = User.create(createEmail(), createName(), createPassword()).getValue();
+      const user1 = User.create(createEmail(), createName(), createPassword());
+      const user2 = User.create(createEmail(), createName(), createPassword());
 
       expect(user1.id).not.toBe(user2.id);
     });
@@ -41,10 +39,8 @@ describe("User", () => {
       const name = createName();
       const password = createPassword();
 
-      const result = User.reconstruct(id, email, name, password);
+      const user = User.reconstruct(id, email, name, password);
 
-      expect(result.isSuccess()).toBe(true);
-      const user = result.getValue();
       expect(user.id).toBe(id);
       expect(user.email).toBe(email);
       expect(user.name).toBe(name);
@@ -52,50 +48,43 @@ describe("User", () => {
     });
 
     it("should fail with empty id", () => {
-      const result = User.reconstruct("", createEmail(), createName(), createPassword());
-      expect(result.isFailure()).toBe(true);
-      expect(result.getError()).toContain("El ID no puede ser vacío");
+      expect(() => User.reconstruct("", createEmail(), createName(), createPassword())).toThrow("El ID no puede ser vacío");
     });
 
     it("should fail with whitespace id", () => {
-      const result = User.reconstruct("   ", createEmail(), createName(), createPassword());
-      expect(result.isFailure()).toBe(true);
-      expect(result.getError()).toContain("El ID no puede ser vacío");
+      expect(() => User.reconstruct("   ", createEmail(), createName(), createPassword())).toThrow("El ID no puede ser vacío");
     });
   });
 
   describe("UpdateEmail", () => {
     it("should update with valid email", () => {
-      const user = User.create(createEmail(), createName(), createPassword()).getValue();
-      const newEmail = Email.create("newemail@example.com").getValue();
+      const user = User.create(createEmail(), createName(), createPassword());
+      const newEmail = Email.create("newemail@example.com");
 
-      const result = user.updateEmail(newEmail);
+      user.updateEmail(newEmail);
 
-      expect(result.isSuccess()).toBe(true);
       expect(user.email).toBe(newEmail);
     });
   });
 
   describe("UpdateName", () => {
     it("should update with valid name", () => {
-      const user = User.create(createEmail(), createName(), createPassword()).getValue();
-      const newName = Name.create("Pedro").getValue();
+      const user = User.create(createEmail(), createName(), createPassword());
+      const newName = Name.create("Pedro");
 
-      const result = user.updateName(newName);
+      user.updateName(newName);
 
-      expect(result.isSuccess()).toBe(true);
       expect(user.name).toBe(newName);
     });
   });
 
   describe("UpdatePassword", () => {
     it("should update with valid password", () => {
-      const user = User.create(createEmail(), createName(), createPassword()).getValue();
-      const newPassword = Password.create("NewPass456").getValue();
+      const user = User.create(createEmail(), createName(), createPassword());
+      const newPassword = Password.create("NewPass456");
 
-      const result = user.updatePassword(newPassword);
+      user.updatePassword(newPassword);
 
-      expect(result.isSuccess()).toBe(true);
       expect(user.password).toBe(newPassword);
     });
   });
@@ -103,20 +92,20 @@ describe("User", () => {
   describe("Equals", () => {
     it("should return true with same UUID", () => {
       const id = "550e8400-e29b-41d4-a716-446655440000";
-      const user1 = User.reconstruct(id, createEmail(), createName(), createPassword()).getValue();
+      const user1 = User.reconstruct(id, createEmail(), createName(), createPassword());
       const user2 = User.reconstruct(
         id,
-        Email.create("different@example.com").getValue(),
-        Name.create("Maria").getValue(),
+        Email.create("different@example.com"),
+        Name.create("Maria"),
         createPassword()
-      ).getValue();
+      );
 
       expect(user1.equals(user2)).toBe(true);
     });
 
     it("should return false with different UUID", () => {
-      const user1 = User.create(createEmail(), createName(), createPassword()).getValue();
-      const user2 = User.create(createEmail(), createName(), createPassword()).getValue();
+      const user1 = User.create(createEmail(), createName(), createPassword());
+      const user2 = User.create(createEmail(), createName(), createPassword());
 
       expect(user1.equals(user2)).toBe(false);
     });
@@ -126,8 +115,8 @@ describe("User", () => {
       const name = createName();
       const password = createPassword();
 
-      const user1 = User.create(email, name, password).getValue();
-      const user2 = User.create(email, name, password).getValue();
+      const user1 = User.create(email, name, password);
+      const user2 = User.create(email, name, password);
 
       expect(user1.equals(user2)).toBe(false);
     });
@@ -135,7 +124,7 @@ describe("User", () => {
 
   describe("ToString", () => {
     it("should contain user info", () => {
-      const user = User.create(createEmail(), createName(), createPassword()).getValue();
+      const user = User.create(createEmail(), createName(), createPassword());
       const str = user.toString();
 
       expect(str).toContain(user.id);

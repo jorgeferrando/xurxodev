@@ -1,7 +1,5 @@
-import { Result } from "../shared/Result";
-
 /**
- * Value Object Name with validation using Result monad
+ * Value Object Name with validation
  * Invariants: minimum 2 characters, only letters
  */
 export class Name {
@@ -11,22 +9,22 @@ export class Name {
     this.value = value;
   }
 
-  static create(value: string): Result<Name> {
+  static create(value: string): Name {
     if (!value || value.trim().length === 0) {
-      return Result.fail("El nombre no puede estar vacío");
+      throw new Error("El nombre no puede estar vacío");
     }
 
     const trimmed = value.trim();
 
     if (trimmed.length < 2) {
-      return Result.fail("El nombre debe tener al menos 2 caracteres");
+      throw new Error("El nombre debe tener al menos 2 caracteres");
     }
 
     if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(trimmed)) {
-      return Result.fail("El nombre solo puede contener letras");
+      throw new Error("El nombre solo puede contener letras");
     }
 
-    return Result.ok(new Name(trimmed));
+    return new Name(trimmed);
   }
 
   equals(other: Name): boolean {

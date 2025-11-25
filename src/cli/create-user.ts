@@ -7,44 +7,24 @@ import { Password } from "../value-objects/Password";
 import { InMemoryStorage } from "../storage/InMemoryStorage";
 
 function createUser(name: string, email: string, password: string): void {
-  const nameResult = Name.create(name);
-  if (nameResult.isFailure()) {
-    console.error("✗ Error al crear nombre:", nameResult.getError());
+  try {
+    const userName = Name.create(name);
+    const userEmail = Email.create(email);
+    const userPassword = Password.create(password);
+    const user = User.create(userEmail, userName, userPassword);
+
+    const storage = InMemoryStorage.getInstance();
+    storage.addUser(user);
+
+    console.log("✓ Usuario creado exitosamente:");
+    console.log(`  ID: ${user.id}`);
+    console.log(`  Nombre: ${user.name}`);
+    console.log(`  Email: ${user.email}`);
+    console.log(`  Password: ${user.password}`);
+  } catch (error) {
+    console.error("✗ Error:", (error as Error).message);
     process.exit(1);
   }
-
-  const emailResult = Email.create(email);
-  if (emailResult.isFailure()) {
-    console.error("✗ Error al crear email:", emailResult.getError());
-    process.exit(1);
-  }
-
-  const passwordResult = Password.create(password);
-  if (passwordResult.isFailure()) {
-    console.error("✗ Error al crear contraseña:", passwordResult.getError());
-    process.exit(1);
-  }
-
-  const userResult = User.create(
-    emailResult.getValue(),
-    nameResult.getValue(),
-    passwordResult.getValue()
-  );
-
-  if (userResult.isFailure()) {
-    console.error("✗ Error al crear usuario:", userResult.getError());
-    process.exit(1);
-  }
-
-  const user = userResult.getValue();
-  const storage = InMemoryStorage.getInstance();
-  storage.addUser(user);
-
-  console.log("✓ Usuario creado exitosamente:");
-  console.log(`  ID: ${user.id}`);
-  console.log(`  Nombre: ${user.name}`);
-  console.log(`  Email: ${user.email}`);
-  console.log(`  Password: ${user.password}`);
 }
 
 const args = process.argv.slice(2);
